@@ -1,0 +1,49 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Data.SqlClient;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace AdminPanel
+{
+    public partial class TestWork : Form
+    {
+        SqlConnection Con = new SqlConnection(@"Data Source = (LocalDB)\MSSQLLocalDB; AttachDbFilename=C:\Users\User\Desktop\ATM-master\Admindtb.mdf;Integrated Security = True; Connect Timeout = 30");
+        // SqlConnection Con = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\User\Documents\testWork.mdf;Integrated Security=True;Connect Timeout=30");
+        public TestWork()
+        {
+            InitializeComponent();
+            populate();
+        }
+
+        private void populate()
+        {
+            Con.Open();
+            SqlCommand cmd = new SqlCommand("select Id, Name from Test_tbl", Con);
+            SqlDataReader rdr;
+            rdr = cmd.ExecuteReader();
+            DataTable dt = new DataTable();
+            dt.Columns.Add("Currency", typeof(string));
+            dt.Load(rdr);
+            comboBox1.DisplayMember = "Name";
+            comboBox1.ValueMember = "Id";
+            comboBox1.DataSource = dt;
+            Con.Close();
+        }
+
+        private void TestWork_Load(object sender, EventArgs e)
+        {
+           
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            MessageBox.Show(comboBox1.SelectedValue.ToString());
+        }
+    }
+}
