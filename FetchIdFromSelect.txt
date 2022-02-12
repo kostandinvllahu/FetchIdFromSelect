@@ -41,9 +41,25 @@ namespace AdminPanel
            
         }
 
+       //=================================================================
+        public List<string> FillListFromDatabase()
+        {
+            string query = "select description from rights r where exists(select 1 from test_tbl u where u.id = r.id and u.id = '"+getId+"')";
+            List<string>result = new List<string>();
+           // Con.Open();
+            DataTable tab = new DataTable();
+            new SqlDataAdapter(query, Con).Fill(tab);
+            result = tab.Rows.OfType<DataRow>().Select(dr => dr.Field<string>("description")).ToList();
+            return result;
+          //  Con.Close();
+        }
+
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            MessageBox.Show(comboBox1.SelectedValue.ToString());
+            getId = Convert.ToInt32(comboBox1.SelectedValue.ToString());
+            FillListFromDatabase();
+           //MessageBox.Show(getId.ToString());
         }
+//====================================================================
     }
 }
