@@ -19,7 +19,12 @@ namespace AdminPanel
         {
             InitializeComponent();
             populate();
+            populateCheckedList();
+            fillList();
         }
+
+        int getId = 0;
+        int getSelectedRightId = 0;
 
         private void populate()
         {
@@ -41,7 +46,18 @@ namespace AdminPanel
            
         }
 
-       //=================================================================
+        private void populateCheckedList()
+        {
+            string query = "select Id, Description from Rights";
+              
+                    DataTable tab = new DataTable();
+                    new SqlDataAdapter(query, Con).Fill(tab);    
+                    ((ListBox)checkedListBox1).DataSource = tab;
+                    ((ListBox)checkedListBox1).DisplayMember = "Description";
+                    ((ListBox)checkedListBox1).ValueMember = "Id";
+        }
+        
+//=================================================================
         public List<string> FillListFromDatabase()
         {
             string query = "select description from rights r where exists(select 1 from test_tbl u where u.id = r.id and u.id = '"+getId+"')";
@@ -51,7 +67,8 @@ namespace AdminPanel
             new SqlDataAdapter(query, Con).Fill(tab);
             result = tab.Rows.OfType<DataRow>().Select(dr => dr.Field<string>("description")).ToList();
             return result;
-          //  Con.Close();
+           
+            //  Con.Close();
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -60,6 +77,30 @@ namespace AdminPanel
             FillListFromDatabase();
            //MessageBox.Show(getId.ToString());
         }
-//====================================================================
+//==========================KETU MERRET VLERA E LISTES DHE MBLIDHET ME 1 QE TE SYGJERON===============================
+        public void fillList()
+        {
+
+            List<int> list = new List<int>();
+            list.Add(3);
+           for(int i=0; i<list.Count; i++)
+            {
+                int num = list[i] + 1;
+                textBox1.Text = num.ToString();
+            }
+           
+            
+        }
+//======================================================END==========================================================
+        private void button1_Click(object sender, EventArgs e)
+        {
+            getSelectedRightId = Convert.ToInt32(checkedListBox1.SelectedValue.ToString());
+            for(int i=0; i<getSelectedRightId; i++)
+            {
+                MessageBox.Show(getSelectedRightId.ToString());
+            }
+            
+        }
+        //====================================================================
     }
 }
